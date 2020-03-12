@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 
-	log "github.com/micro/go-micro/v2/logger"
+	"github.com/ingirls/common/log"
 
 	proto "github.com/ingirls/user/api/proto/user"
 	user "github.com/ingirls/user/proto/user"

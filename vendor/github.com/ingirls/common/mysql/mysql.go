@@ -53,7 +53,7 @@ func InitMysql(confs map[string]Conf) {
 			continue
 		}
 
-		log.Println("mysql [%s] connected.", name)
+		log.Printf("mysql [%s] connected.", name)
 		MysqlDriver[name] = db
 	}
 }

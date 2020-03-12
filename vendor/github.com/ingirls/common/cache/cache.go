@@ -30,7 +30,7 @@ func With(name ...string) *cache.Client {
 		return CacheDriver[k]
 	}
 
-	log.Panicf("redis [%k] not exist.", k)
+	log.Panicf("redis [%s] not exist.", k)
 	return nil
 }
 

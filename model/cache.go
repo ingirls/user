@@ -5,8 +5,8 @@ import (
 
 	"github.com/go-redis/redis/v7"
 	"github.com/ingirls/common/cache"
+	"github.com/ingirls/common/log"
 	proto "github.com/ingirls/user/proto/user"
-	log "github.com/micro/go-micro/v2/logger"
 )
 
 // Cache struct

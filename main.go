@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"net/http"
 	"time"
 
 	"github.com/ingirls/common/cache"
+	"github.com/ingirls/common/log"
 	"github.com/ingirls/common/mysql"
 	"github.com/ingirls/user/config"
 	"github.com/ingirls/user/handler"
@@ -13,7 +15,9 @@ import (
 
 	"github.com/micro/cli/v2"
 	"github.com/micro/go-micro/v2"
-	log "github.com/micro/go-micro/v2/logger"
+
+	// log "github.com/micro/go-micro/v2/logger"
+
 	"github.com/micro/go-micro/v2/server"
 	"github.com/micro/go-plugins/wrapper/monitoring/prometheus/v2"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -22,12 +26,14 @@ import (
 )
 
 func main() {
+	log.New("./logs/" + config.ServiceNamespace + ".promtail.log")
+
 	// New Service
 	service := micro.NewService(
 		micro.Name("go.micro.srv.user"),
 		micro.Version("latest"),
 		micro.Action(action),
-		micro.WrapHandler(prometheus.NewHandlerWrapper()),
+		micro.WrapHandler(logWrapper, prometheus.NewHandlerWrapper()),
 		micro.RegisterTTL(time.Second*30),
 		micro.RegisterInterval(time.Second*15),
 		micro.Flags(
@@ -79,6 +85,14 @@ func action(c *cli.Context) error {
 		prometheusBoot(c.String("prometheus_addr"))
 	}
 	return nil
+}
+
+// logWrapper is a handler wrapper
+func logWrapper(fn server.HandlerFunc) server.HandlerFunc {
+	return func(ctx context.Context, req server.Request, rsp interface{}) error {
+		log.Infof("[wrapper] srv request=%v", req.Endpoint())
+		return fn(ctx, req, rsp)
+	}
 }
 
 func prometheusBoot(addr string) error {

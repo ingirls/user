@@ -2,10 +2,11 @@ package config
 
 import (
 	"github.com/ingirls/common/cache"
+	"github.com/ingirls/common/log"
 	"github.com/ingirls/common/mysql"
 	"github.com/micro/go-micro/v2/config"
 	"github.com/micro/go-micro/v2/config/source"
-	log "github.com/micro/go-micro/v2/logger"
+
 	"github.com/micro/go-plugins/config/source/consul/v2"
 )
 
@@ -13,7 +14,9 @@ const (
 	// ProjectNamespace ProjectNamespace
 	ProjectNamespace = "ingirls"
 	// ServiceNamespace ServiceNamespace
-	ServiceNamespace = "user"
+	ServiceNamespace = "user-srv"
+	// APINamespace APINamespace
+	APINamespace = "user-api"
 )
 
 // InitConfig InitConfig
