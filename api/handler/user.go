@@ -5,32 +5,26 @@ import (
 
 	log "github.com/micro/go-micro/v2/logger"
 
-	"github.com/ingirls/common/api"
-	proto "github.com/ingirls/user/proto/user"
-	apiProto "github.com/micro/go-micro/v2/api/proto"
+	proto "github.com/ingirls/user/api/proto/user"
+	user "github.com/ingirls/user/proto/user"
 )
 
-// Handler struct
+// User struct
 type User struct {
-	Client proto.Service
+	Client user.Service
 }
 
-// Call is a single request handler called via client.Call or the generated client code
-func (h *User) Say(ctx context.Context, req *apiProto.Request, rsp *apiProto.Response) error {
+// Say is a single request handler called via client.Call or the generated client code
+func (h *User) Say(ctx context.Context, req *proto.Request, rsp *proto.Response) error {
 
-	var args proto.Request
-	if err := api.Bind(req, &args); err != nil {
-		return err
-	}
+	log.Info(req)
 
-	log.Info("args ", args)
-
-	resp, err := h.Client.Say(ctx, &proto.Request{Name: args.Name})
+	resp, err := h.Client.Say(ctx, &user.Request{Name: req.Name})
 	if err != nil {
 		return err
 	}
 
 	log.Info("resp ", resp)
-
-	return api.JSON(rsp, 200, resp)
+	rsp.Msg = resp.Msg
+	return nil
 }
