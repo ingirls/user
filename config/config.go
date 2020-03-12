@@ -4,6 +4,7 @@ import (
 	"github.com/ingirls/common/cache"
 	"github.com/ingirls/common/mysql"
 	"github.com/micro/go-micro/v2/config"
+	"github.com/micro/go-micro/v2/config/source"
 	log "github.com/micro/go-micro/v2/logger"
 	"github.com/micro/go-plugins/config/source/consul/v2"
 )
@@ -36,33 +37,7 @@ func InitConfig(consulAddr string) {
 	}
 
 	log.Info(Conf)
-
-	// 开始侦听变动事件
-	watcher, err := conf.Watch()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Info("Watch changes ...")
-	for {
-		v, err := watcher.Next()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		log.Infof("Watch changes: %v", string(v.Bytes()))
-
-		err = conf.Load(consulSource)
-		if err != nil {
-			log.Error("consul config load fail. err=", err)
-		}
-
-		if err := conf.Get(ProjectNamespace).Scan(&Conf); err != nil {
-			log.Error("consul config scan fail. err=", err)
-		}
-
-		log.Info("new conf ", Conf)
-	}
+	go confWatcher(conf, consulSource)
 }
 
 // Conf Conf
@@ -91,4 +66,34 @@ type RedisConf struct {
 	Host     string `json:"host"`
 	Password string `json:"password"`
 	Port     string `json:"port"`
+}
+
+func confWatcher(conf config.Config, consulSource source.Source) {
+	// 开始侦听变动事件
+	watcher, err := conf.Watch()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Info("Watch changes ...")
+
+	for {
+		v, err := watcher.Next()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		log.Infof("Watch changes: %v", string(v.Bytes()))
+
+		err = conf.Load(consulSource)
+		if err != nil {
+			log.Error("consul config load fail. err=", err)
+		}
+
+		if err := conf.Get(ProjectNamespace).Scan(&Conf); err != nil {
+			log.Error("consul config scan fail. err=", err)
+		}
+
+		log.Info("new conf ", Conf)
+	}
 }
