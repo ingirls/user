@@ -478,6 +478,8 @@ github.com/micro/go-micro/v2 v2.2.1-0.20200309204305-241614ff686e h1:eFNq2Slx2JD
 github.com/micro/go-micro/v2 v2.2.1-0.20200309204305-241614ff686e/go.mod h1:JxIKgdCqe9hhdUOAyd2uWaCpRdSn9dWq8wnwlo8qodk=
 github.com/micro/go-plugins v1.5.1 h1:swcFD7ynCTUo98APqIEIbPu2XMd6yVGTnI8PqdnCwOQ=
 github.com/micro/go-plugins v1.5.1/go.mod h1:jcxejzJCAMH731cQHbS/hncyKe0rxAbzKkibj8glad4=
+github.com/micro/go-plugins/config/source/consul/v2 v2.0.3 h1:hUzNsYrDmZ4i4ua7y/vhUxlbrW39hpGIDVVS4cWgR88=
+github.com/micro/go-plugins/config/source/consul/v2 v2.0.3/go.mod h1:nTuPTtkEpHVufMbiQFnO7enKwkNt6lI8AebeohBcawo=
 github.com/micro/go-plugins/registry/consul/v2 v2.0.3 h1:gdiPbrMLS7kRbUx0/Mk5bsWjVBB6k35zAAbySiO0mgQ=
 github.com/micro/go-plugins/registry/consul/v2 v2.0.3/go.mod h1:ZffsiTaaplO3k0PkaZS5EQFg5rDLiJvYEuiob0g9jFU=
 github.com/micro/go-plugins/wrapper/monitoring/prometheus/v2 v2.0.3 h1:w0nKfJhbh/ZwHE1Qp3UG3NBsV0lM0PHwDhT5WxJivdc=

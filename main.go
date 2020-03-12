@@ -4,7 +4,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/ingirls/common/cache"
+	"github.com/ingirls/common/mysql"
+	"github.com/ingirls/user/config"
 	"github.com/ingirls/user/handler"
+	"github.com/ingirls/user/model"
 	"github.com/ingirls/user/subscriber"
 
 	"github.com/micro/cli/v2"
@@ -27,6 +31,11 @@ func main() {
 		micro.RegisterTTL(time.Second*30),
 		micro.RegisterInterval(time.Second*15),
 		micro.Flags(
+			&cli.StringFlag{
+				Name:    "consul_addr",
+				Usage:   "consul addr",
+				EnvVars: []string{"CONSUL_ADDR"},
+			},
 			&cli.StringFlag{
 				Name:    "prometheus_addr",
 				Usage:   "prometheus addr",
@@ -55,6 +64,16 @@ func main() {
 }
 
 func action(c *cli.Context) error {
+	// 获取配置
+	config.InitConfig(c.String("consul_addr"))
+
+	// 实例化缓存 数据库
+	mysql.InitMysql(config.Conf.Mysql)
+	cache.InitCache(config.Conf.Redis)
+
+	// 初始化 数据表
+	model.AutoMigrate()
+
 	//prometheusBoot
 	if len(c.String("prometheus_addr")) > 0 {
 		prometheusBoot(c.String("prometheus_addr"))

@@ -4,6 +4,19 @@ package go.micro.srv.user;
 
 service Service {
 	rpc Say(Request) returns (Response) {}
+
+	rpc Create(User) returns (User) {}
+	rpc List(Request) returns (Response) {}
+	rpc Delete(User) returns (Null) {}
+	rpc Update(User) returns (User) {}
+
+	rpc InfoByID (ID) returns (User);
+	rpc InfoByUsername (Username) returns (User);
+	rpc InfoByMobile (Mobile) returns (User);
+	rpc InfoByEmail (Email) returns (User);
+
+	rpc UpdatePassword (IDAndPassword) returns (User);
+	rpc CheckPassword (IDAndPassword) returns (User);
 }
 
 message Message {
@@ -16,4 +29,54 @@ message Request {
 
 message Response {
 	string msg = 1;
+}
+
+message Null {}
+
+message User {
+	int64 id = 1;
+	string email = 2;
+	string username = 3;
+	string nickname = 4;
+	string mobile = 5;
+	string password = 6;
+	string salt = 7;
+	STATUS status = 8;
+	string avatar = 9;
+    int64 created_at = 10;
+    int64 updated_at = 11;
+}
+
+message ID {
+	int64 id = 1;
+}
+
+message Username {
+	string username = 1;
+}
+
+message Mobile {
+	string mobile = 1;
+}
+
+message Email {
+	string email = 1;
+}
+
+message IDAndPassword {
+	int64 id = 1;
+	string password = 2;
+}
+
+enum STATUS {
+    // 占位
+	UNKNOWN = 0;
+    // 正常
+    NORMAL = 1;
+    // 未激活
+    INACTIVE = 2;
+    // 禁用
+    DISABLED = 3;
+    // 删除
+    DELETED = 4;
 }
