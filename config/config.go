@@ -36,6 +36,33 @@ func InitConfig(consulAddr string) {
 	}
 
 	log.Info(Conf)
+
+	// 开始侦听变动事件
+	watcher, err := conf.Watch()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Info("Watch changes ...")
+	for {
+		v, err := watcher.Next()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		log.Infof("Watch changes: %v", string(v.Bytes()))
+
+		err = conf.Load(consulSource)
+		if err != nil {
+			log.Error("consul config load fail. err=", err)
+		}
+
+		if err := conf.Get(ProjectNamespace).Scan(&Conf); err != nil {
+			log.Error("consul config scan fail. err=", err)
+		}
+
+		log.Info("new conf ", Conf)
+	}
 }
 
 // Conf Conf
